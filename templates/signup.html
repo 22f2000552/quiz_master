@@ -1,0 +1,49 @@
+
+
+
+{% extends "base.html" %}
+
+{% block title %}Sign Up - QuizElite{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Sign Up</h2>
+    <form action="{{ url_for('signup') }}" method="POST">
+        <div class="mb-3">
+            <label for="name" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label"> Create Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+
+        <div class = "mb-3">
+            <label for="qualification">Qualification</label>
+            <input type="text" id="qualification" name="qualification" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="dob" class="form-label">Date of Birth</label>
+            <input type="date" class="form-control" id="dob" name="dob" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+        
+        <div class="text-center mt-3">
+            <a href="{{ url_for('login') }}">Already have an account? Login</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

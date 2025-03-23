@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Home - QuizElite{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h1>Welcome to QuizElite</h1>
+    <p>Test your knowledge with our quizzes!</p>
+    <a href="{{ url_for('login') }}" class="btn btn-primary">Get Started</a>
+</div>
+{% endblock %}
