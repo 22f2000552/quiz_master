@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Select a Subject</h1>
+    <div class="row">
+        {% for subject in subjects %}
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ subject.name }}</h5>
+                    <p class="card-text">{{ subject.description }}</p>
+                    <a href="{{ url_for('quiz_chapters', subject_id=subject.id) }}" class="btn btn-primary">View Chapters</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

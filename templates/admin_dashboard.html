@@ -1,110 +1,78 @@
+
+
 {% extends "base.html" %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Admin Dashboard</h2>
-
-    <!-- User Management -->
-    <h3>Users</h3>
-    <table class="table">
-        <thead>
+    <h1>Admin - User Management</h1>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
             <tr>
-                <th>Username</th>
+                <th>ID</th>
                 <th>Email</th>
-                <th>Blocked</th>
+                <th>Status</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
             {% for user in users %}
             <tr>
-                <td>{{ user.username }}</td>
+                <td>{{ user.id }}</td>
                 <td>{{ user.email }}</td>
-                <td>{{ "Yes" if user.is_blocked else "No" }}</td>
+                <td>{{ "Blocked" if user.is_blocked else "Active" }}</td>
                 <td>
-                    <a href="{{ url_for('block_user', user_id=user.id) }}" class="btn btn-warning">
-                        {{ "Unblock" if user.is_blocked else "Block" }}
-                    </a>
+                    <form action="{{ url_for('block_unblock_user', user_id=user.id) }}" method="post">
+                        <button type="submit">
+                            {% if user.is_blocked %}Unblock{% else %}Block{% endif %}
+                        </button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <!-- Subject Management -->
-    <h3>Add Subject</h3>
-    <form action="{{ url_for('add_subject') }}" method="post">
-        <input type="text" name="name" placeholder="Subject Name" required class="form-control">
-        <input type="text" name="description" placeholder="Description" required class="form-control">
-        <input type="text" name="qualification" placeholder="Qualification" required class="form-control">
-        <button type="submit" class="btn btn-primary mt-2">Add Subject</button>
-    </form>
-
-    <h3>Subjects</h3>
-    <ul class="list-group">
-        {% for subject in subjects %}
-        <li class="list-group-item">
-            {{ subject.name }} 
-            <a href="{{ url_for('delete_subject', subject_id=subject.id) }}" class="btn btn-danger btn-sm float-end">Delete</a>
-
-            <!-- Chapter Management -->
-            <form action="{{ url_for('add_chapter', subject_id=subject.id) }}" method="post" class="mt-2">
-                <input type="text" name="name" placeholder="Chapter Name" required class="form-control">
-                <input type="text" name="description" placeholder="Description" required class="form-control">
-                <button type="submit" class="btn btn-success mt-2">Add Chapter</button>
-            </form>
-
-            <h4>Chapters</h4>
-            <ul>
-                {% for chapter in subject.chapters %}
-                <li>
-                    {{ chapter.name }}
-                    <a href="{{ url_for('delete_chapter', chapter_id=chapter.id) }}" class="btn btn-danger btn-sm">Delete</a>
-
-                    <!-- Quiz Management -->
-                    <form action="{{ url_for('add_quiz', chapter_id=chapter.id) }}" method="post" class="mt-2">
-                        <input type="number" name="duration" placeholder="Duration (minutes)" required class="form-control">
-                        <button type="submit" class="btn btn-info mt-2">Add Quiz</button>
+    <h1 class="mt-5">Subjects Management</h1>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Chapters</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject in subjects %}
+            <tr>
+                <td>{{ subject.id }}</td>
+                <td>{{ subject.name }}</td>
+                <td>{{ subject.description }}</td>
+                <td><a href="{{ url_for('view_chapters', subject_id=subject.id) }}" class="btn btn-info">View Chapters</a></td>
+                <td>
+                    <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" class="btn btn-primary">Edit</a>
+                    <form action="{{ url_for('delete_subject', subject_id=subject.id) }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
+                </td>
 
-                    <h5>Quizzes</h5>
-                    <ul>
-                        {% for quiz in chapter.quizzes %}
-                        <li>
-                            Quiz ({{ quiz.duration }} min)
-                            <a href="{{ url_for('delete_quiz', quiz_id=quiz.id) }}" class="btn btn-danger btn-sm">Delete</a>
-
-                            <!-- Question Management -->
-                            <form action="{{ url_for('add_question', quiz_id=quiz.id) }}" method="post" class="mt-2">
-                                <input type="text" name="question_statement" placeholder="Question" required class="form-control">
-                                <input type="text" name="option1" placeholder="Option 1" required class="form-control">
-                                <input type="text" name="option2" placeholder="Option 2" required class="form-control">
-                                <input type="text" name="option3" placeholder="Option 3" required class="form-control">
-                                <input type="text" name="option4" placeholder="Option 4" required class="form-control">
-                                <input type="number" name="correct_option" placeholder="Correct Option (1-4)" required class="form-control">
-                                <input type="text" name="correct_answer" placeholder="Correct Answer" required class="form-control">
-                                <button type="submit" class="btn btn-primary mt-2">Add Question</button>
-                            </form>
-
-                            <h6>Questions</h6>
-                            <ul>
-                                {% for question in quiz.questions %}
-                                <li>
-                                    {{ question.question_statement }}
-                                    <a href="{{ url_for('delete_question', question_id=question.id) }}" class="btn btn-danger btn-sm">Delete</a>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </li>
-                {% endfor %}
-            </ul>
-        </li>
-        {% endfor %}
-    </ul>
-
-    <a href="{{ url_for('logout') }}" class="btn btn-danger mt-4">Logout</a>
-</div>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <h2>Add New Subject</h2>
+    <form action="{{ url_for('add_subject') }}" method="post">
+        <div class="form-group">
+            <label for="name">Subject Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" class="form-control" id="description" name="description" required>
+        </div>
+        <button type="submit" class="btn btn-success">Add Subject</button>
+    </form>
+</div> 
 {% endblock %}

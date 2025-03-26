@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Select a Quiz in {{ chapter.name }}</h1>
+    <div class="row">
+        {% for quiz in quizzes %}
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Quiz{{ quiz.id }}</h5>
+
+                    <p class="card-text">Duration: {{ quiz.duration }} minutes</p>
+                    <p class="card-text">Total marks: {{ quiz.total_marks }} </p>
+                    <a href="{{ url_for('start_quiz', quiz_id=quiz.id) }}" class="btn btn-primary">Start quiz</a>
+                    
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

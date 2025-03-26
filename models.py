@@ -20,8 +20,7 @@ class Subject(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(1000), nullable=False)
-    image_path = db.Column(db.String(255), nullable=True)
-    qualification = db.Column(db.String(50), nullable=False)  # Fixed db.String(50)
+    qualification = db.Column(db.String(50), nullable=True)  # Fixed db.String(50)
 
     chapters = db.relationship('Chapter', backref='subject', lazy=True, cascade='all, delete-orphan') 
 
@@ -38,6 +37,7 @@ class Quiz(db.Model):
     date = db.Column(db.DateTime, nullable=True)
     duration = db.Column(db.Integer, nullable=False)
     chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id'), nullable=False)
+    total_marks = db.Column(db.Integer, nullable=False, default=0)  # New field
 
     questions = db.relationship('Question', backref='quiz', lazy=True, cascade='all, delete-orphan')
 
@@ -50,6 +50,7 @@ class Question(db.Model):
     option4 = db.Column(db.String(200), nullable=False)
     correct_option = db.Column(db.Integer, nullable=False)
     correct_answer = db.Column(db.String(200), nullable=False)
+    marks = db.Column(db.Integer, nullable=False, default=1) 
 
     quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable=False)  
 

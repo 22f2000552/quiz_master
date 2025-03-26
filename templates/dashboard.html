@@ -1,36 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | QuizElite</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">QuizElite</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+{% extends "base.html" %}
 
-    <div class="container text-center mt-5">
-        <h1>Welcome, {{ user.name }}!</h1>
-        <p>Your email: {{ user.email }}</p>
-        <p>Your qualification: {{ user.qualification }}</p>
-        
-        <h2 class="mt-4">Available Quizzes</h2>
-        <ul class="list-group">
-            <li class="list-group-item">Quiz 1</li>
-            <li class="list-group-item">Quiz 2</li>
-            <li class="list-group-item">Quiz 3</li>
-        </ul>
+{% block content %}
+<div class="container mt-4">
+    <h1>User Dashboard</h1>
+
+    <div class="card p-3 mb-4">
+        <h2>Your Profile</h2>
+        <form method="post">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ user.name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
+            </div>
+            <div class="form-group">
+                <label for="qualification">Qualification</label>
+                <input type="qualification" class="form-control" id="qualification" name="qualification" value="{{ user.qualification }}" required>
+            </div>
+            <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" class="form-control" id="dob" name="dob" value="{{ user.dob.strftime('%Y-%m-%d') }}" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="margin-top:10px;">Update Profile</button>
+        </form>
     </div>
 
-</body>
-</html>
+    <!-- Additional content for user dashboard can go here -->
+    <h1>Your Score</h1>
+
+    <div class="card p-3 mb-4">
+        {% if scores %}
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Subject</th>
+                    <th>Chapter</th>
+                    <th>Quiz</th>
+                    <th>Marks/Total marks</th>
+                    <th>Score</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for score, quiz, chapter, subject, percentage, timestamp_ist in scores %}
+                <tr>
+                    <td>{{ subject.name }}</td>
+                    <td>{{ chapter.name }}</td>
+                    <td>Quiz {{ quiz.id }}</td>
+                    <td>{{ score.total_scored }}/{{ quiz.total_marks }}</td>
+                    <td>{{percentage}}%</td>
+                    <td>{{ timestamp_ist}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No quiz scores available yet.</p>
+        {% endif %}
+            
+</div>
+{% endblock %}

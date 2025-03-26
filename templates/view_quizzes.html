@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h1>Quizzes in {{ chapter.name }}</h1>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Duration (minutes)</th>
+                <th>Total Marks</th> 
+                <th>Questions</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for quiz in quizzes %}
+            <tr>
+                <td>Quiz{{ quiz.id }}</td>
+                <td>{{ quiz.date.strftime('%Y-%m-%d') if quiz.date else 'N/A' }}</td>
+                <td>{{ quiz.duration }}</td>
+                <td>{{ quiz.total_marks }}</td> 
+                <td><a href="{{ url_for('view_questions', quiz_id=quiz.id) }}" class="btn btn-info">View Questions</a></td>
+                <td>
+                    <form action="{{ url_for('delete_quiz', chapter_id=chapter.id, quiz_id=quiz.id) }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <h2>Add New Quiz</h2>
+    <form action="{{ url_for('add_quiz', chapter_id=chapter.id) }}" method="post">
+        <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" class="form-control" id="date" name="date">
+        </div>
+        <div class="form-group">
+            <label for="duration">Duration (minutes)</label>
+            <input type="number" class="form-control" id="duration" name="duration" required>
+        </div>
+        <button type="submit" class="btn btn-success">Add Quiz</button>
+    </form>
+</div>
+{% endblock %}

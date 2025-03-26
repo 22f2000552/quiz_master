@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Chapters in {{ subject.name }}</h1>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Quizzes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for chapter in chapters %}
+            <tr>
+                <td>{{ chapter.id }}</td>
+                <td>{{ chapter.name }}</td>
+                <td>{{ chapter.description }}</td>
+                <td><a href="{{ url_for('view_quizzes', chapter_id=chapter.id) }}" class="btn btn-info">View Quizzes</a></td>
+                <td>
+                    <!-- Edit Button -->
+                    <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}" class="btn btn-warning">Edit</a>
+
+                    <!-- Delete Form -->
+                    <form action="{{ url_for('delete_chapter', chapter_id=chapter.id) }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <h2>Add New Chapter</h2>
+    <form action="{{ url_for('add_chapter', subject_id=subject.id) }}" method="post">
+        <div class="form-group">
+            <label for="name">Chapter Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" class="form-control" id="description" name="description" required>
+        </div>
+        <button type="submit" class="btn btn-success">Add Chapter</button>
+    </form>
+</div>
+{% endblock %}
