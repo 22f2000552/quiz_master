@@ -62,4 +62,69 @@
         {% endif %}
             
 </div>
+
+<h1>Summary</h1>
+
+<!-- Total Quizzes per Subject -->
+<h2>Total Quizzes per Subject</h2>
+<div>
+    <canvas id="totalQuizzesChart"></canvas>
+</div>
+
+<!-- Quizzes Attempted by User -->
+<h2>Quizzes Attempted by You</h2>
+<div>
+    <canvas id="attemptedQuizzesChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Total Quizzes per Subject
+    const totalCtx = document.getElementById('totalQuizzesChart');
+    new Chart(totalCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ subject_names|tojson }},
+            datasets: [{
+                label: 'Total Quizzes',
+                data: {{ total_quizzes|tojson }},
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // Quizzes Attempted by User
+    const attemptCtx = document.getElementById('attemptedQuizzesChart');
+    new Chart(attemptCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ attempted_subjects|tojson }},
+            datasets: [{
+                label: 'Quizzes Attempted',
+                data: {{ attempted_quizzes|tojson }},
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+
+  
+
 {% endblock %}
+
+

@@ -7,20 +7,20 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    passhash = db.Column(db.String(100), nullable=False)  # Store hashed passwords
-    is_admin = db.Column(db.Boolean, nullable=False, default=False)  # Fixed db.Boolean
+    passhash = db.Column(db.String(100), nullable=False)  
+    is_admin = db.Column(db.Boolean, nullable=False, default=False)  
     is_blocked = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(50), nullable=True)
     email = db.Column(db.String(100), nullable=False, unique=True)
-    username = db.Column(db.String(50), nullable=False, unique=True)  # Fixed db.String(50)
-    qualification = db.Column(db.String(50), nullable=False)  # Fixed db.String(50)
+    username = db.Column(db.String(50), nullable=False, unique=True) 
+    qualification = db.Column(db.String(50), nullable=False)  
     dob = db.Column(db.DateTime, nullable=False)
 
 class Subject(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(1000), nullable=False)
-    qualification = db.Column(db.String(50), nullable=True)  # Fixed db.String(50)
+    qualification = db.Column(db.String(50), nullable=True)  #
 
     chapters = db.relationship('Chapter', backref='subject', lazy=True, cascade='all, delete-orphan') 
 
@@ -37,13 +37,13 @@ class Quiz(db.Model):
     date = db.Column(db.DateTime, nullable=True)
     duration = db.Column(db.Integer, nullable=False)
     chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id'), nullable=False)
-    total_marks = db.Column(db.Integer, nullable=False, default=0)  # New field
+    total_marks = db.Column(db.Integer, nullable=False, default=0) 
 
     questions = db.relationship('Question', backref='quiz', lazy=True, cascade='all, delete-orphan')
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    question_statement = db.Column(db.Text, nullable=False)  # Ensured it's not nullable
+    question_statement = db.Column(db.Text, nullable=False) 
     option1 = db.Column(db.String(200), nullable=False)
     option2 = db.Column(db.String(200), nullable=False)
     option3 = db.Column(db.String(200), nullable=False)

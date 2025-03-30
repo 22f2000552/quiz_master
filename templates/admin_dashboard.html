@@ -3,6 +3,80 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+    
+<div class="container-fluid mt-2">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{{ url_for('admin_dashboard') }}" method="GET">
+                <div class="input-group">
+                    <select name="parameter" id="parameter" class="parameter form-select">
+                        <option value="user" {% if search_type=='user' %}selected{% endif %}>User</option>
+                        <option value="subject" {% if search_type=='subject' %}selected{% endif %}>Subject</option>
+                        <option value="quizzes" {% if search_type=='quizzes' %}selected{% endif %}>Quizzes</option>
+                    </select>
+                    <input type="text" class="form-control" name="query" placeholder="Search for..." value="{{ query }}">
+                    <span class="input-group-btn">
+                        <button class="btn btn-outline-primary" type="submit" style="margin-left:10px;">Search</button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container ">
+{% if search_results %}
+<h3 class="mt-4">Search Results</h3>
+<table class="table table-bordered table-striped">
+    <thead>
+        {% if search_type == "user" %}
+        <tr>
+            <th>User ID</th>
+            <th>Email</th>
+            <th>Name</th>
+        </tr>
+        {% elif search_type == "subject" %}
+        <tr>
+            <th>Subject ID</th>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        {% elif search_type == "quizzes" %}
+        <tr>
+            <th>Quiz ID</th>
+            <th>Chapter</th>
+            <th>Subject</th>
+        </tr>
+        {% endif %}
+    </thead>
+    <tbody>
+        {% for result in search_results %}
+        <tr>
+            {% if search_type == "user" %}
+            <td>{{ result.id }}</td>
+            <td>{{ result.email }}</td>
+            <td>{{ result.name }}</td>
+
+            {% elif search_type == "subject" %}
+            <td>{{ result.id }}</td>
+            <td>{{ result.name }}</td>
+            <td>{{ result.description }}</td>
+
+            {% elif search_type == "quizzes" %}
+            <td>Quiz {{ result[0].id }}</td>
+            <td>{{ result[1].name }}</td>
+            <td>{{ result[2].name }}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="mt-3">No results found.</p>
+{% endif %}
+ </div>
+
+
 <div class="container mt-4">
     <h1>Admin - User Management</h1>
     <table class="table table-bordered table-striped">
@@ -22,9 +96,10 @@
                 <td>{{ "Blocked" if user.is_blocked else "Active" }}</td>
                 <td>
                     <form action="{{ url_for('block_unblock_user', user_id=user.id) }}" method="post">
-                        <button type="submit">
+                        <button type="submit" class="btn btn-danger">
                             {% if user.is_blocked %}Unblock{% else %}Block{% endif %}
                         </button>
+                            <a href="{{ url_for('view_user', user_id = user.id) }}" class="btn btn-info">View User Details</a>
                     </form>
                 </td>
             </tr>
@@ -72,7 +147,46 @@
             <label for="description">Description</label>
             <input type="text" class="form-control" id="description" name="description" required>
         </div>
-        <button type="submit" class="btn btn-success">Add Subject</button>
+        <button type="submit" class="btn btn-success" style="margin-top:10px ;">Add Subject</button>
     </form>
 </div> 
+
+<div class="container">
+<h1 style="margin-top:10px;">Quiz attempted by user per subject</h1>
+<div>
+    <canvas id="quizAttemptsChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('quizAttemptsChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ subject_names|safe }}, // Ensure safe conversion to JSON
+            datasets: [{
+                label: 'Number of Users Attempted',
+                data: {{ quiz_attempt_counts|safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+</div>
+
+
+
 {% endblock %}
+
+
